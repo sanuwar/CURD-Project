@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using System.Text;
 using System.Data;
 using Microsoft.Data.SqlClient;
+using System.Security.Claims;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace DotNetWebAPI.Controllers
 {
@@ -13,6 +16,8 @@ namespace DotNetWebAPI.Controllers
     {
         private readonly DataContextDapper _dapper;
         private readonly IConfiguration _config;
+        private object symetricSecutiryKey;
+
         public AuthController(IConfiguration config)
         {
             _dapper = new DataContextDapper (config);
@@ -109,7 +114,15 @@ namespace DotNetWebAPI.Controllers
                     }
                 }
 
-            return Ok();
+
+            string datorIdSql = @"SELECT DatorId FROM CountryDataSchema.Dator WHERE Email = '" +
+                userForLogin.Email + "'";
+
+            int datorId = _dapper.LoadDataSingle<int>(datorIdSql);
+
+            return Ok(new Dictionary<string, string>{
+                {"token", CreateToken(datorId)}
+            });
         }
 
         private byte[] GetPasswordHash(string password, byte[] passwordSalt)
@@ -125,6 +138,41 @@ namespace DotNetWebAPI.Controllers
                             iterationCount: 100000,
                             numBytesRequested: 256 / 8
                         );
+        }
+
+        private string CreateToken(int datorId)
+        {
+            Claim[] claims = new Claim[]
+            {
+                new Claim("datorId", datorId.ToString())
+            };
+
+            string? tokenKeyString = _config.GetSection("AppSettings:TokenKey").Value;
+ 
+            SymmetricSecurityKey tokenKey = new SymmetricSecurityKey
+            (
+                Encoding.UTF8.GetBytes(
+                tokenKeyString != null ? tokenKeyString : ""
+                )
+            );
+
+            SigningCredentials credentials = new SigningCredentials(
+                tokenKey, 
+                SecurityAlgorithms.HmacSha512Signature
+                );
+
+            SecurityTokenDescriptor descriptor = new SecurityTokenDescriptor()
+            {
+                Subject = new ClaimsIdentity(claims),
+                SigningCredentials = credentials,
+                Expires = DateTime.Now.AddDays(1)
+            };
+
+            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+
+            SecurityToken token = tokenHandler.CreateToken(descriptor);
+
+            return tokenHandler.WriteToken(token);
         }
     }
 }
