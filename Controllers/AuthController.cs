@@ -60,10 +60,26 @@ namespace DotNetWebAPI.Controllers
 
                         if(_dapper.ExecuteSqlWithParameters(sqlAddAuth, sqlParameters))
 
+                    {
+                        string sqlAddUser = @"INSERT INTO CountryDataSchema.Dator (
+	                        [FirstName],
+	                        [LastName],
+	                        [Email],
+                            [Gender] 
+                            ) VALUES (" +
+                            "'" + userForRegistration.FirstName +
+                            "'," + "'" + userForRegistration.LastName +
+                            "'," + "'" + userForRegistration.Email +
+                            "'," + "'" + userForRegistration.Gender +
+                            "')";
+
+                        if (_dapper.ExecuteSql(sqlAddUser))
                         {
                         return Ok();
                         }
-                        throw new Exception("Failed to register user");
+                    throw new Exception("Failed to add user");
+                    }
+                    throw new Exception("Failed to register user");
 
                     } 
                     throw new Exception("User with this email already exists");
@@ -101,7 +117,8 @@ namespace DotNetWebAPI.Controllers
             String passwordSaltPlusString = _config.GetSection("AppSettings:PasswordKey").Value + 
                             Convert.ToBase64String(passwordSalt); 
 
-                        return KeyDerivation.Pbkdf2(
+                        return KeyDerivation.Pbkdf2
+                        (
                             password: password,
                             salt: Encoding.ASCII.GetBytes(passwordSaltPlusString),
                             prf: KeyDerivationPrf.HMACSHA256,
