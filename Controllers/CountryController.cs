@@ -29,7 +29,6 @@ public class CountryController: ControllerBase
         IEnumerable<Country>countries= _dapper.LoadData<Country>(sql);
         return countries;
     }
-
      
     [HttpGet("GetSingleCountry/{countryId}")]
 
@@ -57,6 +56,8 @@ public class CountryController: ControllerBase
 		        "',  [IsDemocracy]= '" + country.IsDemocracy +
 		        "',  [PopulationInMillion]="+ country.PopulationInMillion +
 		    " WHERE CountryId = " + country.CountryId;
+
+            
 
             Console.WriteLine(sql);
 

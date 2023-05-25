@@ -60,3 +60,7 @@ C:\DotNetPractice\DotNetWebAPI\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.D
 C:\DotNetPractice\DotNetWebAPI\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Runtime.Caching.dll
 C:\DotNetPractice\DotNetWebAPI\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
 C:\DotNetPractice\DotNetWebAPI\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
+C:\DotNetPractice\DotNetWebAPI\bin\Debug\net6.0\Microsoft.AspNetCore.Server.Kestrel.Https.dll
+C:\DotNetPractice\DotNetWebAPI\bin\Debug\net6.0\Microsoft.AspNetCore.Server.Kestrel.Transport.Abstractions.dll
+C:\DotNetPractice\DotNetWebAPI\bin\Debug\net6.0\Newtonsoft.Json.dll
+C:\DotNetPractice\DotNetWebAPI\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

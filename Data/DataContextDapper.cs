@@ -20,6 +20,8 @@ namespace DotNetWebAPI.Data
             return dbConnection.Query<T>(sql);
         }
 
+        
+
         public T LoadDataSingle<T>(string sql)
         {
             IDbConnection dbConnection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
